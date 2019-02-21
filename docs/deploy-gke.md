@@ -10,15 +10,11 @@ deployed and write down the External IP Address that was assigned.
     1. Using one of the .googleusercontent.com domains with a self signed SSL cert is 
     impossible due to HTTP Strict Transport Security (HSTS).  
 1. Create GKE cluster.
-1. Get your `gcloud` identity:
-    1. `gcloud info | grep Account`
-1. Create  the cluster role binding:
-    1. `kubectl create clusterrolebinding myname-cluster-admin-binding --clusterrole=cluster-admin --user=myname@example.org`
-1. Create the NFS provisioner (backed by GCE Disk):
-    1. `kubectl create -f nfs-example/deployment.yaml -f nfs-example/rbac.yaml -f nfs-example/class.yaml`
 1. Install Helm.
+1. Provision the NFS server using Helm.
+    1. `helm install --name nfs-server-provisioner stable/nfs-server-provisioner --set=persistence.enabled=True,persistence.size=200Gi`
 1. Provision nginx-ingress using Helm.
-    1. `helm install --name nginx-ingress stable/nginx-ingress --set rbac.create=true  --set controller.service.loadBalancerIP=<External IP Address>`
+    1. `helm install --name nginx-ingress stable/nginx-ingress --set rbac.create=true --set controller.service.loadBalancerIP=<External IP Address>`
 1. Update values.yaml:
     1. Update the domain, subdomain_prefix and support_email as appropriate.
     1. The webui and apiserver images should use the develop tag if using Kubernetes 
