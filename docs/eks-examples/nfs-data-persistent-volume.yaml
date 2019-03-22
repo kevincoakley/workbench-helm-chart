@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-nfs-server-provisioner-0
+spec:
+  storageClassName: ""
+  capacity:
+    # Update storage with the size of the EBS Volume
+    storage: <EBS Disk Size>
+  accessModes:
+    - ReadWriteOnce
+  awsElasticBlockStore:
+    # Update volumeID with the EBS Volume ID
+    volumeID: <EBS Volume ID>
+    fsType: ext4
+  # Replace the namespace with the namespace the nfs-server-provisioner Helm Chart will be deployed in and replace the
+  # name with the name of the nfs-server-provisioner PersistentVolumeClaim, if you named the Helm Chart nfs-server-provisioner
+  # then the PVC will be named data-nfs-server-provisioner-0
+  claimRef:
+    namespace: default
+    name: data-nfs-server-provisioner-0
