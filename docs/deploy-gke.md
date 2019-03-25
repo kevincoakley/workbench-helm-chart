@@ -23,6 +23,7 @@ deployed and write down the External IP Address that was assigned.
             1. `helm install stable/nfs-server-provisioner --name nfs-server-provisioner --values ./docs/gke-examples/nfs-server-provisioner-values.yaml` This step has to be done every time a new GKE cluster is created.
 1. Provision nginx-ingress using Helm.
     1. Update values in gke-examples/nginx-ingress-values.yaml, add the External IP Address that was provisioned in the first step. 
+    1. Update default-ssl-certificate in gke-examples/nginx-ingress-values.yaml if you decide not to use the workbench namespace for launching the workbench or if you change the tls secretName in values.yaml.
     1. `helm install stable/nginx-ingress --name nginx-ingress --values ./docs/gke-examples/nginx-ingress-values.yaml`
 1. Update values.yaml:
     1. Update the domain, subdomain_prefix and support_email as appropriate.
