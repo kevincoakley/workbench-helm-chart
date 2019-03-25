@@ -20,6 +20,7 @@ Deploy Instructions
     1. Update the security groups and subnet values in eks-examples/alb-ingress.yaml. 
     1. `kubectl create -f ./docs/eks-examples/alb-ingress.yaml`
 1. Provision nginx-ingress using Helm.
+    1. Update default-ssl-certificate in eks-examples/nginx-ingress-values.yaml if you decide not to use the workbench namespace for launching the workbench or if you change the tls secretName in values.yaml.
     1. `helm install stable/nginx-ingress --name nginx-ingress --values ./docs/eks-examples/nginx-ingress-values.yaml`
 1. Update DNS CNAME with the ELB hostname
     1. `aws elb describe-load-balancers | grep DNSName`
