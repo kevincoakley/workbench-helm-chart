@@ -20,10 +20,14 @@ workbench:
     apiserver: "ndslabs/apiserver:develop"
     etcd: "ndslabs/etcd:2.2.5"
     smtp: "namshi/smtp:latest"
-  persistence:
+  etcd_storage:
+    presistant: false
+    ebs_volume_id:
+    gce_persistent_disk_name:
+    storageClass:
     accessMode: "ReadWriteOnce"
     size: "1Gi"
-  
+
 # FIXME: This has not been tested
 oauth:
   enabled: false
