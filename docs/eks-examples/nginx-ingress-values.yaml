@@ -7,6 +7,7 @@ controller:
   extraArgs:
     # The name_space/name of the secret used for the default ssl certificate
     default-ssl-certificate: workbench/ndslabs-tls-secret
+  replicaCount: 1
 
 rbac:
   create: true
