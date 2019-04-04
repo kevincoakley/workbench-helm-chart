@@ -20,10 +20,18 @@ workbench:
     apiserver: "ndslabs/apiserver:develop"
     etcd: "ndslabs/etcd:2.2.5"
     smtp: "namshi/smtp:latest"
-  persistence:
+  etcd_storage:
+    persistent:
+      # Values can be "false" for no persistent storage, "aws" for awsElasticBlockStore,
+      # or "gce" for gcePersistentDisk
+      type: false
+      # If using awsElasticBlockStore enter the EBS volume id, if using gcePersistentDisk
+      # enter the persistent disk name
+      volume_id:
+    storageClass:
     accessMode: "ReadWriteOnce"
     size: "1Gi"
-  
+
 # FIXME: This has not been tested
 oauth:
   enabled: false
