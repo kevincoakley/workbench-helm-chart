@@ -1,0 +1,10 @@
+---
+# Example Config for the stable/nfs-server-provisioner Helm Chart (https://github.com/helm/charts/tree/master/stable/nfs-server-provisioner)
+# In order to reuse existing GKE volumes, this examples requires a PersistentVolume to be configured before installing
+# the Helm Chart. See nfs-data-persistent-volume.yaml for an example.
+persistence:
+  enabled: true
+  storageClass: "-"
+
+rbac:
+  create: true
