@@ -170,7 +170,7 @@ spec:
   - hosts:
     - {{ .Values.workbench.subdomain_prefix }}.{{ .Values.workbench.domain }}
     secretName: {{ .Values.tls.secretName }}
-{{- if .Values.workbench.etcd_storage.presistant | default false }}
+{{- if .Values.workbench.etcd_storage.persistent.type | default false }}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -182,13 +182,12 @@ spec:
     storage: {{ .Values.workbench.etcd_storage.size | quote }}
   accessModes:
     - {{ .Values.workbench.etcd_storage.accessMode | quote }}
-  {{- if .Values.workbench.etcd_storage.ebs_volume_id | default nil }}
+  {{- if eq .Values.workbench.etcd_storage.persistent.type "aws" | default nil }}
   awsElasticBlockStore:
-    volumeID: {{ .Values.workbench.etcd_storage.ebs_volume_id | quote }}
-  {{- end }}
-  {{- if .Values.workbench.etcd_storage.gce_persistent_disk_name | default nil }}
+    volumeID: {{ .Values.workbench.etcd_storage.persistent.volume_id | quote }}
+  {{- else if eq .Values.workbench.etcd_storage.persistent.type "gce" | default nil }}
   gcePersistentDisk:
-    pdName: {{ .Values.workbench.etcd_storage.gce_persistent_disk_name | quote }}
+    pdName: {{ .Values.workbench.etcd_storage.persistent.volume_id | quote }}
   {{- end }}
     fsType: ext4
   claimRef:
@@ -206,7 +205,7 @@ metadata:
     volume.beta.kubernetes.io/storage-class: {{ .Values.workbench.etcd_storage.storageClass | quote }}
   {{- end }}
 spec:
-  {{- if .Values.workbench.etcd_storage.presistant | default false }}
+  {{- if .Values.workbench.etcd_storage.persistent.type | default false }}
   storageClassName: ""
   volumeName: {{ .Release.Name }}-etcd
   {{- end }}
