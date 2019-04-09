@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "alb"
+  labels:
+    app: "ALBApp"
+  annotations:
+    # trigger the alb-ingress-controller
+    kubernetes.io/ingress.class: "alb"
+    # set ALB parameters
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: "instance"
+    alb.ingress.kubernetes.io/security-groups: <sg-securitygroup>
+    alb.ingress.kubernetes.io/subnets: <subnet-1,subnet-2,subnet-3>
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS": 443}]'
+
+    # allow 404s on the health check
+    alb.ingress.kubernetes.io/healthcheck-path: "/"
+    alb.ingress.kubernetes.io/success-codes: "200,404"
+spec:
+  # forward all requests to nginx-ingress-controller
+  rules:
+    - http:
+        paths:
+          - path: /
+            backend:
+              serviceName: "nginx-ingress-controller"
+              servicePort: 80

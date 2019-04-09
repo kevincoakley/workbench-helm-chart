@@ -1,0 +1,16 @@
+---
+# Example Config for the stable/nginx-ingress Helm Chart (https://github.com/helm/charts/tree/master/stable/nginx-ingress)
+controller:
+  service:
+    # Update loadBalancerIP with your GCP External IP addresses
+    loadBalancerIP: <External IP Address>
+  config:
+    # Sets the maximum allowed size of the client request body (https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#custom-max-body-size)
+    proxy-body-size: 5120m
+  extraArgs:
+    # The name_space/name of the secret used for the default ssl certificate
+    default-ssl-certificate: workbench/ndslabs-tls-secret
+  replicaCount: 1
+
+rbac:
+  create: true

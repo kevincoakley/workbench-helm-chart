@@ -34,7 +34,7 @@ workbench:
   home_storage:
     home_pvc_suffix: "-home"
     pvc_storage_class: "nfs"
-  
+
 # FIXME: This has not been tested
 oauth:
   enabled: false
