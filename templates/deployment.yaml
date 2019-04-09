@@ -181,7 +181,7 @@ spec:
   capacity:
     storage: {{ .Values.workbench.etcd_storage.size | quote }}
   accessModes:
-    - {{ .Values.workbench.etcd_storage.accessMode | quote }}
+    - {{ .Values.workbench.etcd_storage.access_mode | quote }}
   {{- if eq .Values.workbench.etcd_storage.persistent.type "aws" | default nil }}
   awsElasticBlockStore:
     volumeID: {{ .Values.workbench.etcd_storage.persistent.volume_id | quote }}
@@ -201,8 +201,8 @@ metadata:
   name: {{ .Release.Name }}-etcd
   namespace: {{ .Release.Namespace }}
   annotations:
-  {{- if .Values.workbench.etcd_storage.storageClass }}
-    volume.beta.kubernetes.io/storage-class: {{ .Values.workbench.etcd_storage.storageClass | quote }}
+  {{- if .Values.workbench.etcd_storage.storage_class }}
+    volume.beta.kubernetes.io/storage-class: {{ .Values.workbench.etcd_storage.storage_class | quote }}
   {{- end }}
 spec:
   {{- if .Values.workbench.etcd_storage.persistent.type | default false }}
@@ -210,7 +210,7 @@ spec:
   volumeName: {{ .Release.Name }}-etcd
   {{- end }}
   accessModes:
-    - {{ .Values.workbench.etcd_storage.accessMode | quote }}
+    - {{ .Values.workbench.etcd_storage.access_mode | quote }}
   resources:
     requests:
       storage: {{ .Values.workbench.etcd_storage.size | quote }}

@@ -28,8 +28,8 @@ workbench:
       # If using awsElasticBlockStore enter the EBS volume id, if using gcePersistentDisk
       # enter the persistent disk name
       volume_id:
-    storageClass:
-    accessMode: "ReadWriteOnce"
+    storage_class:
+    access_mode: "ReadWriteOnce"
     size: "1Gi"
   home_storage:
     home_pvc_suffix: "-home"
