@@ -34,6 +34,8 @@ workbench:
   home_storage:
     home_pvc_suffix: "-home"
     pvc_storage_class: "nfs"
+  timeout: 30
+  inactivity_timeout: 480
 
 # FIXME: This has not been tested
 oauth:
