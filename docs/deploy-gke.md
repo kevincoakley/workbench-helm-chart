@@ -45,7 +45,7 @@ deployed and write down the External IP Address that was assigned.
 1. Provision nginx-ingress using Helm.
     1. Update values in gke-examples/nginx-ingress-values.yaml, add the External IP Address that was provisioned in the first step. 
     1. Update default-ssl-certificate in gke-examples/nginx-ingress-values.yaml if you decide not to use the workbench namespace for launching the workbench or if you change the tls secretName in values.yaml.
-    1. `helm install stable/nginx-ingress --name nginx-ingress --values ./docs/gke-examples/nginx-ingress-values.yaml`
+    1. `helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx    --namespace ingress-nginx --create-namespace --version 4.4.2  -f ./docs/gke-examples/nginx-ingress-values.yaml`
 
 **Workbench**
 
