@@ -1,0 +1,34 @@
+{{- if .Values.mongodb.autoimport.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-import-specs"
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ .Release.Name }}-specloader
+    app.kubernetes.io/component: specloader
+  annotations:
+    {{ toYaml .Values.mongodb.autoimport.annotations | nindent 4 }}
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ .Release.Name }}-specloader
+        app.kubernetes.io/component: specloader
+    spec:
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{ toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      restartPolicy: OnFailure
+      containers:
+       - name: import-specs
+         image: ndslabs/specloader
+         imagePullPolicy: Always
+         env:
+            {{ toYaml .Values.mongodb.autoimport.env | nindent 12 }}
+{{- end }}
