@@ -1,0 +1,141 @@
+2.0 - Production
+================
+# Make sure all of the helm dependencies are up to date
+helm dep up
+
+# Create a namespace for the dev environment
+kubectl create namespace workbench
+
+# Add add the SSL cert to the dev environment
+kubectl -n workbench create secret tls workbench-tls \
+  --cert=kc-workbench.cer \
+  --key=kc-workbench.key
+
+# Create the workbench pv and pvc
+kubectl apply -f kc-workbench-mongodb.yaml
+kubectl apply -f kc-workbench-nfs.yaml
+
+# Install the workbench chart
+helm upgrade --install workbench . \
+  --namespace workbench --create-namespace \
+  -f kc-gke-prod-values.yaml
+
+# Delete the workbench chart
+helm -n workbench uninstall workbench
+
+# Delete the workbench pv and pvc
+kubectl delete -f kc-workbench-mongodb.yaml
+kubectl delete -f kc-workbench-nfs.yaml
+
+# Delete the namespace for the environment
+kubectl delete namespace workbench
+
+
+2.0 - Development
+=================
+# Make sure all of the helm dependencies are up to date
+helm dep up
+
+# Create a namespace for the dev environment
+kubectl create namespace workbench-dev
+
+# Add add the SSL cert to the dev environment
+kubectl -n workbench-dev create secret tls mwb-dev-tls \
+  --cert=kc-mwb-dev.cer \
+  --key=kc-mwb-dev.key
+
+# Create the workbench-dev pv and pvc
+kubectl apply -f kc-mwb-dev-mongodb.yaml
+kubectl apply -f kc-mwb-dev-nfs.yaml
+
+# Install the workbench chart
+helm upgrade --install workbench-dev . \
+  --namespace workbench-dev --create-namespace \
+  -f kc-gke-dev-values.yaml
+
+# Delete the workbench chart
+helm -n workbench-dev uninstall workbench-dev
+
+# Delete the workbench-dev pv and pvc
+kubectl delete -f kc-mwb-dev-mongodb.yaml
+kubectl delete -f kc-mwb-dev-nfs.yaml
+
+# Delete the namespace for the dev environment
+kubectl delete namespace workbench-dev
+
+# Get a shell in the container
+kubectl -n workbench-dev exec -i -t workbench-dev-84dc569f4c-mw67j --container apiserver -- /bin/bash
+
+ENCRYPT
+=======
+
+gpg --output values.yaml.gpg --encrypt --recipient kcoakley@sdsc.edu values.yaml
+gpg --encrypt --recipient kcoakley@sdsc.edu --output values.yaml.gpg values.yaml
+
+DECRYPT
+=======
+
+gpg --output values.yaml --decrypt values.yaml.gpg
+
+
+Deprecated Commands Below
+=========================
+
+GKE 1.0
+=======
+
+helm install stable/nginx-ingress --name nginx-ingress --values ./docs/gke-examples/kc-nginx-ingress-values.yaml
+
+helm install stable/nfs-client-provisioner --name nfs-client-provisioner-prod --values ./docs/gke-examples/kc-prod-nfs-client-provisioner-values.yaml
+helm install stable/nfs-client-provisioner --name nfs-client-provisioner-dev --values ./docs/gke-examples/kc-dev-nfs-client-provisioner-values.yaml
+
+helm upgrade --install workbench-dev . \
+  --namespace workbench-dev --create-namespace \
+  -f kc-gke-dev-values.yaml
+
+helm upgrade --install workbench . \
+  --namespace workbench --create-namespace \
+  -f kc-gke-prod-values.yaml
+
+
+EKS 1.0
+=======
+
+kubectl create -f docs/eks-examples/kc-alb-ingress.yaml
+helm install stable/nginx-ingress --name nginx-ingress --values ./docs/eks-examples/kc-nginx-ingress-values.yaml
+
+aws elb describe-load-balancers | grep DNSName
+<Update DNS>
+
+kubectl create -f ./docs/eks-examples/kc-nfs-data-persistent-volume.yaml
+helm install stable/nfs-server-provisioner --name nfs-server-provisioner --values ./docs/eks-examples/nfs-server-provisioner-values.yaml
+
+helm install . --name=workbench --namespace=workbench --values kc-values.yaml
+helm install . --name=workbench-dev --namespace=workbench-dev --values kc-mwb-dev-values.yaml
+
+NFS-CLIENT 1.0
+==============
+
+helm install stable/nfs-client-provisioner --name nfs-client-provisioner-prod --values ./kc-backup/nfs-client/nfs-client-provisioner-values.yaml
+helm install stable/nfs-client-provisioner --name nfs-client-provisioner-dev --values ./kc-backup/nfs-client/dev-nfs-client-provisioner-values.yaml
+
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-d60f197e.efs.us-west-2.amazonaws.com:/ /mnt/efs/
+
+helm install . --name=workbench-dev --namespace=workbench-dev --values kc-mwb-dev-values.yaml --dry-run --debug
+
+
+ETCD 1.0
+========
+
+helm install stable/etcd-operator --name etcd-operator --namespace=etcd --values ./kc-backup/etcd-operator-values.yaml
+helm install stable/etcd-operator --name etcd-operator --values ./kc-backup/etcd-operator-values.yaml
+helm upgrade --values ./kc-backup/etcd-operator-values.yaml etcd-operator stable/etcd-operator
+
+
+SSL 1.0
+=======
+
+kubectl create secret tls --namespace=workbench-dev ndslabs-tls \
+    --cert=../../../Metabolomics/ssl/mwb-dev/2022/__mwb-dev_sdsc_edu_cert.cer \
+    --key=../../../Metabolomics/ssl/mwb-dev/mwb-dev.key
+
