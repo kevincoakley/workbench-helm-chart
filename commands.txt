@@ -69,13 +69,20 @@ kubectl -n workbench-dev exec -i -t workbench-dev-84dc569f4c-mw67j --container a
 ENCRYPT
 =======
 
-gpg --output values.yaml.gpg --encrypt --recipient kcoakley@sdsc.edu values.yaml
 gpg --encrypt --recipient kcoakley@sdsc.edu --output values.yaml.gpg values.yaml
 
 DECRYPT
 =======
 
 gpg --output values.yaml --decrypt values.yaml.gpg
+
+Renew SSL Certs
+===============
+kubectl -n workbench delete secret workbench-tls
+
+kubectl -n workbench create secret tls workbench-tls \
+  --cert=kc-workbench.cer \
+  --key=kc-workbench.key
 
 
 Deprecated Commands Below
